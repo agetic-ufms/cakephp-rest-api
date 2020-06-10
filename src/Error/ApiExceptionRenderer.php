@@ -78,7 +78,7 @@ class ApiExceptionRenderer extends ExceptionRenderer
     {
         $response = $this->_getController()->response;
         $code = $this->_code($exception);
-        $response->getStatusCode($this->_code($exception));
+        $response = $response->withStatus($this->_code($exception));
 
         Configure::write('apiExceptionMessage', $exception->getMessage());
 
@@ -95,13 +95,11 @@ class ApiExceptionRenderer extends ExceptionRenderer
         }
 
         if ('xml' === Configure::read('ApiRequest.responseType')) {
-            $body = $response->getBody();
-            $body->write(Xml::fromArray([Configure::read('ApiRequest.xmlResponseRootNode') => $responseData], 'tags')->asXML());
-            $response->withBody($body);
+            $response = $response->withType('xml');
+            $response = $response->withBody(Xml::fromArray([Configure::read('ApiRequest.xmlResponseRootNode') => $response->getBody()], 'tags')->asXML());
         } else {
-            $body = $response->getBody();
-            $body->write(json_encode($responseData));
-            $response->withBody($body);
+            $response = $response->withType('json');
+            $response = $response->withBody(json_encode($response->getBody()));
         }
 
         $this->controller->response = $response;

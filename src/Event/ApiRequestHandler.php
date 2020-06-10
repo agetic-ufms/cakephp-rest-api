@@ -51,13 +51,13 @@ class ApiRequestHandler implements EventListenerInterface
         if ('OPTIONS' === $request->getMethod()) {
             $event->stopPropagation();
             $response = $event->getData()['response'];
-            $response->getStatusCode(200);
+            $response = $response->withStatus(200);
 
             return $response;
         }
 
         if (empty($request->getData())) {
-//            $request->data = $request->input('json_decode', true);
+            $request->data = $request->input('json_decode', true);
         }
     }
 
@@ -111,9 +111,9 @@ class ApiRequestHandler implements EventListenerInterface
         $response = $event->getData()['response'];
 
         if ('xml' === Configure::read('ApiRequest.responseType')) {
-            $response->withType('xml');
+            $response = $response->withType('xml');
         } else {
-            $response->withType('json');
+            $response = $response->withType('json');
         }
 
         $response->cors($request)
