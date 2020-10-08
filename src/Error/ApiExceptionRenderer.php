@@ -96,10 +96,10 @@ class ApiExceptionRenderer extends ExceptionRenderer
 
         if ('xml' === Configure::read('ApiRequest.responseType')) {
             $response = $response->withType('xml');
-            $response = $response->withBody(Xml::fromArray([Configure::read('ApiRequest.xmlResponseRootNode') => $response->getBody()], 'tags')->asXML());
+            $response = $response->withStringBody(Xml::fromArray([Configure::read('ApiRequest.xmlResponseRootNode') => $response->getBody()], 'tags')->asXML());
         } else {
             $response = $response->withType('json');
-            $response = $response->withBody(json_encode($response->getBody()));
+            $response = $response->withStringBody(json_encode($response->getBody()));
         }
 
         $this->controller->response = $response;
