@@ -31,10 +31,10 @@ class ApiView extends View
         parent::initialize();
 
         if ('xml' === Configure::read('ApiRequest.responseType')) {
-            $this->response->withType('xml');
+            $this->response = $this->response->withType('xml');
             $this->_responseLayout = 'xml_response';
         } else {
-            $this->response->withType('json');
+            $this->response = $this->response->withType('json');
         }
     }
 
